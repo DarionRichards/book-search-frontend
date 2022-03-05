@@ -20,8 +20,6 @@ const SignupForm = () => {
 
 	const [executeAddUser, {loading, data, error}] = useMutation(ADD_USER);
 
-	console.log(userFormData);
-
 	const handleInputChange = (event) => {
 		const {name, value} = event.target;
 		setUserFormData({...userFormData, [name]: value});
@@ -38,8 +36,6 @@ const SignupForm = () => {
 		}
 
 		try {
-			console.log("Form submitted", userFormData);
-
 			const {data} = await executeAddUser({
 				variables: {
 					userInput: {
