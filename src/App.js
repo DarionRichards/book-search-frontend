@@ -1,25 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import {
+	ApolloClient,
+	InMemoryCache,
+	ApolloProvider,
+	createHttpLink,
+} from "@apollo/client";
+
+import {setContext} from "@apollo/client/link/context";
+
+import SearchBooks from "./pages/SearchBooks";
+import SavedBooks from "./pages/SavedBooks";
+import Navbar from "./components/Navbar";
+// import {AppProvider} from "./context/AppProvider";
+
+const httpLink = createHttpLink({
+	uri: "http://localhost:4000/graphql",
+});
+
+const authLink = setContext((_, {headers}) => {
+	// get the authentication token from local storage if it exists
+	const token = localStorage.getItem("token");
+	// return the headers to the context so httpLink can read them
+	return {
+		headers: {
+			...headers,
+			authorization: token ? `Bearer ${token}` : "",
+		},
+	};
+});
+
+const client = new ApolloClient({
+	link: authLink.concat(httpLink),
+	cache: new InMemoryCache(),
+});
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<ApolloProvider client={client}>
+			<Router>
+				<>
+					<Navbar />
+					<Switch>
+						<Route exact path="/" component={SearchBooks} />
+						<Route exact path="/saved" component={SavedBooks} />
+						<Route render={() => <h1 className="display-2">Wrong page!</h1>} />
+					</Switch>
+				</>
+			</Router>
+		</ApolloProvider>
+	);
 }
 
 export default App;
