@@ -12,7 +12,6 @@ import {setContext} from "@apollo/client/link/context";
 import SearchBooks from "./pages/SearchBooks";
 import SavedBooks from "./pages/SavedBooks";
 import Navbar from "./components/Navbar";
-// import {AppProvider} from "./context/AppProvider";
 
 const httpLink = createHttpLink({
 	uri: "http://localhost:4000/graphql",
@@ -20,7 +19,7 @@ const httpLink = createHttpLink({
 
 const authLink = setContext((_, {headers}) => {
 	// get the authentication token from local storage if it exists
-	const token = localStorage.getItem("token");
+	const token = localStorage.getItem("id_token");
 	// return the headers to the context so httpLink can read them
 	return {
 		headers: {
