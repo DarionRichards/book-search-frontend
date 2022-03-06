@@ -9,7 +9,25 @@ import Auth from "../utils/auth";
 import {removeBookId} from "../utils/localStorage";
 
 const SavedBooks = () => {
+	const {loading, data, error, refetch} = useQuery(GET_ME);
+
 	const [executeRemoveBook] = useMutation(REMOVE_BOOK);
+
+	let userData;
+
+	if (error) {
+		throw new ApolloError("Oops");
+	}
+
+	// if data isn't here yet, say so
+	if (loading) {
+		return <h2>LOADING...</h2>;
+	}
+
+	if (data) {
+		refetch();
+		userData = data.me;
+	}
 
 	// create function that accepts the book's mongo _id value as param and deletes the book from the database
 	const handleDeleteBook = async (bookId) => {
@@ -29,20 +47,6 @@ const SavedBooks = () => {
 			console.error(err);
 		}
 	};
-
-	const {loading, data, error} = useQuery(GET_ME);
-
-	if (error) {
-		throw new ApolloError("Oops");
-	}
-
-	// if data isn't here yet, say so
-	if (loading) {
-		return <h2>LOADING...</h2>;
-	}
-
-	// get userData from query data
-	const userData = data.me;
 
 	return (
 		<>
