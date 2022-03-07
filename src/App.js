@@ -14,7 +14,7 @@ import SavedBooks from "./pages/SavedBooks";
 import Navbar from "./components/Navbar";
 
 const httpLink = createHttpLink({
-	uri: "http://localhost:4000/graphql",
+	uri: process.env.GRAPHQL || "https://hidden-peak-29422.herokuapp.com/graphql",
 });
 
 const authLink = setContext((_, {headers}) => {
